@@ -595,7 +595,7 @@ Density-based clustering.
 <p>Evaluates clustering quality and separation between customer segments.</p>
 
 <p align="center">
-  <img src="images/kmeans_silhouette_plot.png" alt="KMeans Silhouette Plot" width="850">
+  <img src="images/kmeans_silhouette_plot.png" alt="KMeans Silhouette Plot" width="300">
 </p>
 
 <hr>
@@ -604,7 +604,7 @@ Density-based clustering.
 <p>Two-dimensional representation of customer segments after dimensionality reduction.</p>
 
 <p align="center">
-  <img src="images/pca_cluster_scatter.png" alt="PCA Cluster Scatter" width="850">
+  <img src="images/pca_cluster_scatter.png" alt="PCA Cluster Scatter" width="300">
 </p>
 
 <hr>
@@ -613,7 +613,7 @@ Density-based clustering.
 <p>Shows the proportion of customers belonging to each identified segment.</p>
 
 <p align="center">
-  <img src="images/segment_pie_chart.png" alt="Customer Segment Distribution" width="850">
+  <img src="images/segment_pie_chart.png" alt="Customer Segment Distribution" width="300">
 </p>
 
 <hr>
@@ -622,7 +622,7 @@ Density-based clustering.
 <p>Compares segment characteristics using Recency, Frequency, and Monetary metrics.</p>
 
 <p align="center">
-  <img src="images/segment_rfm_profiles.png" alt="Segment RFM Profiles" width="850">
+  <img src="images/segment_rfm_profiles.png" alt="Segment RFM Profiles" width="300">
 </p>
 
 <hr>
@@ -631,7 +631,7 @@ Density-based clustering.
 <p>Highlights revenue contribution and value concentration across segments.</p>
 
 <p align="center">
-  <img src="images/segment_value_concentration.png" alt="Segment Value Concentration" width="850">
+  <img src="images/segment_value_concentration.png" alt="Segment Value Concentration" width="300">
 </p>
 
 <hr>
@@ -640,7 +640,7 @@ Density-based clustering.
 <p>Visual representation of relationships learned by the item-based recommendation engine.</p>
 
 <p align="center">
-  <img src="images/product_similarity_heatmap.png" alt="Product Similarity Heatmap" width="850">
+  <img src="images/product_similarity_heatmap.png" alt="Product Similarity Heatmap" width="300">
 </p>
 
 ---
