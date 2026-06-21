@@ -537,111 +537,20 @@ Density-based clustering.
 
 # Visualizations
 
-<h2>1. Transaction Volume by Country</h2>
-<p>Shows the geographical distribution of customer purchases across different countries.</p>
+## Customer Segments
+![Segment Radar Chart](images/segment_radar_chart.png)
 
-<p align="center">
-  <img src="images/chart1_transaction_volume_by_country.png" alt="Transaction Volume by Country" width="350">
-</p>
+## Cluster Separation (PCA View)
+![PCA Cluster Scatter](images/pca_cluster_scatter.png)
 
-<hr>
+## Model Selection
+![Model Comparison](images/clustering_model_comparison.png)
 
-<h2>2. Monthly Revenue Trend</h2>
-<p>Illustrates seasonality and revenue growth patterns over time.</p>
+## Business Impact
+![Segment Value Concentration](images/segment_value_concentration.png)
 
-<p align="center">
-  <img src="images/chart10_monthly_revenue_trend.png" alt="Monthly Revenue Trend" width="350">
-</p>
-
-<hr>
-
-<h2>3. Revenue Distribution</h2>
-<p>Highlights the highly skewed spending behavior commonly observed in retail datasets.</p>
-
-<p align="center">
-  <img src="images/chart4_totalprice_distribution.png" alt="Revenue Distribution" width="350">
-</p>
-
-<hr>
-
-<h2>4. RFM Correlation Heatmap</h2>
-<p>Displays relationships among Recency, Frequency, and Monetary features.</p>
-
-<p align="center">
-  <img src="images/chart13_rfm_correlation_heatmap.png" alt="RFM Correlation Heatmap" width="350">
-</p>
-
-<hr>
-
-<h2>5. Customer Spend vs Purchase Frequency</h2>
-<p>Visualizes spending patterns and purchasing frequency across customers.</p>
-
-<p align="center">
-  <img src="images/chart14_spend_vs_frequency_scatter.png" alt="Spend vs Frequency" width="350">
-</p>
-
-<hr>
-
-<h2>6. K-Means Elbow Curve</h2>
-<p>Used to identify the optimal number of clusters for customer segmentation.</p>
-
-<p align="center">
-  <img src="images/kmeans_elbow_curve.png" alt="KMeans Elbow Curve" width="350">
-</p>
-
-<hr>
-
-<h2>7. K-Means Silhouette Analysis</h2>
-<p>Evaluates clustering quality and separation between customer segments.</p>
-
-<p align="center">
-  <img src="images/kmeans_silhouette_plot.png" alt="KMeans Silhouette Plot" width="350">
-</p>
-
-<hr>
-
-<h2>8. PCA-Based Cluster Visualization</h2>
-<p>Two-dimensional representation of customer segments after dimensionality reduction.</p>
-
-<p align="center">
-  <img src="images/pca_cluster_scatter.png" alt="PCA Cluster Scatter" width="350">
-</p>
-
-<hr>
-
-<h2>9. Customer Segment Distribution</h2>
-<p>Shows the proportion of customers belonging to each identified segment.</p>
-
-<p align="center">
-  <img src="images/segment_pie_chart.png" alt="Customer Segment Distribution" width="350">
-</p>
-
-<hr>
-
-<h2>10. Segment RFM Profiles</h2>
-<p>Compares segment characteristics using Recency, Frequency, and Monetary metrics.</p>
-
-<p align="center">
-  <img src="images/segment_rfm_profiles.png" alt="Segment RFM Profiles" width="350">
-</p>
-
-<hr>
-
-<h2>11. Customer Value Concentration</h2>
-<p>Highlights revenue contribution and value concentration across segments.</p>
-
-<p align="center">
-  <img src="images/segment_value_concentration.png" alt="Segment Value Concentration" width="350">
-</p>
-
-<hr>
-
-<h2>12. Product Similarity Heatmap</h2>
-<p>Visual representation of relationships learned by the item-based recommendation engine.</p>
-
-<p align="center">
-  <img src="images/product_similarity_heatmap.png" alt="Product Similarity Heatmap" width="350">
-</p>
+## Product Recommendations
+![Similarity Heatmap](images/product_similarity_heatmap.png)
 
 ---
 
