@@ -535,22 +535,7 @@ Density-based clustering.
 
 ---
 
-<!-- # Visualizations
-
-## Customer Segments
-![Segment Radar Chart](images/segment_radar_chart.png)
-
-## Cluster Separation (PCA View)
-![PCA Cluster Scatter](images/pca_cluster_scatter.png)
-
-## Model Selection
-![Model Comparison](images/clustering_model_comparison.png)
-
-## Business Impact
-![Segment Value Concentration](images/segment_value_concentration.png)
-
-## Product Recommendations
-![Similarity Heatmap](images/product_similarity_heatmap.png) -->
+# Visualizations
 
 <h2>Customer Segmentation & Clustering</h2>
 
@@ -560,8 +545,13 @@ Density-based clustering.
 </p>
 
 <p align="center">
-  <img src="images/clustering_model_comparison.png" width="350">
+  <img src="images/segment_radar_chart.png" width="350">
   <img src="images/pca_cluster_scatter.png" width="350">
+</p>
+
+<p align="center">
+  <img src="images/clustering_model_comparison.png" width="350">
+  <img src="images/kmeans_silhouette_scores.png" width="350">
 </p>
 
 <h2>Business Insights</h2>
@@ -572,7 +562,26 @@ Density-based clustering.
 </p>
 
 <p align="center">
+  <img src="images/chart6_revenue_by_country.png" width="350">
+  <img src="images/chart1_transaction_volume_by_country.png" width="350">
+</p>
+
+<h2>Customer Value Analysis</h2>
+
+<p align="center">
   <img src="images/segment_value_concentration.png" width="350">
+  <img src="images/rfm_3d_scatter.png" width="350">
+</p>
+
+<p align="center">
+  <img src="images/rfm_score_distribution.png" width="350">
+  <img src="images/chart12_top15_customers_spend.png" width="350">
+</p>
+
+<h2>Recommendation System</h2>
+
+<p align="center">
+  <img src="images/product_similarity_heatmap.png" width="350">
   <img src="images/recommender_evaluation_comparison.png" width="350">
 </p>
 
