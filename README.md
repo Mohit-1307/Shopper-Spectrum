@@ -535,7 +535,7 @@ Density-based clustering.
 
 ---
 
-# Visualizations
+<!-- # Visualizations
 
 ## Customer Segments
 ![Segment Radar Chart](images/segment_radar_chart.png)
@@ -550,7 +550,31 @@ Density-based clustering.
 ![Segment Value Concentration](images/segment_value_concentration.png)
 
 ## Product Recommendations
-![Similarity Heatmap](images/product_similarity_heatmap.png)
+![Similarity Heatmap](images/product_similarity_heatmap.png) -->
+
+<h2>Customer Segmentation & Clustering</h2>
+
+<p align="center">
+  <img src="images/segment_pie_chart.png" width="350">
+  <img src="images/segment_rfm_profiles.png" width="350">
+</p>
+
+<p align="center">
+  <img src="images/clustering_model_comparison.png" width="350">
+  <img src="images/pca_cluster_scatter.png" width="350">
+</p>
+
+<h2>Business Insights</h2>
+
+<p align="center">
+  <img src="images/chart10_monthly_revenue_trend.png" width="350">
+  <img src="images/chart5_top10_products_revenue.png" width="350">
+</p>
+
+<p align="center">
+  <img src="images/segment_value_concentration.png" width="350">
+  <img src="images/recommender_evaluation_comparison.png" width="350">
+</p>
 
 ---
 
