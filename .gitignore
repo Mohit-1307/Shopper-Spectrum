@@ -14,10 +14,6 @@ __pycache__/
 # VS Code settings
 .vscode/
 
-# Model files
-*.pkl
-*.joblib
-
 # System files
 .DS_Store
 Thumbs.db
