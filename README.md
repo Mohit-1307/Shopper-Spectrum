@@ -489,7 +489,7 @@ Density-based clustering.
 | ----------------------- | --------------------------- |
 | Silhouette Score        | 0.4743                      |
 | Davies-Bouldin Index    | 0.7951                      |
-| Calinski-Harabasz Score | Best Among Evaluated Models |
+| Calinski-Harabasz Score | 6411.50 |
 
 ---
 
