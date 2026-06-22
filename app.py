@@ -41,7 +41,7 @@ def load_models():
 
     cluster_label_map = joblib.load('models/cluster_label_map.pkl')
 
-    cosine_sim_df = pd.read_pickle('models/cosine_sim_df.pkl')
+    cosine_sim_df = joblib.load('models/cosine_sim_df.pkl')
 
     return kmeans, scaler, cluster_label_map, cosine_sim_df
 
