@@ -813,7 +813,7 @@ random_state = 42
 
 ## Mohit Singh Rajput
 
-**MOHIT SINGH RAJPUT** — AI/ML Intern @Labmentix
+**MOHIT SINGH RAJPUT** — AI/ML Engineer
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/mohitsingh1307)
 [![GitHub](https://img.shields.io/badge/GitHub-121011?style=flat-square&logo=github&logoColor=white)](https://github.com/Mohit-1307)
