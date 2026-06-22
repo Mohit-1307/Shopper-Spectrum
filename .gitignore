@@ -31,3 +31,5 @@ tmp/
 
 # Python environment variables
 .env
+# Copied files
+* - Copy.csv
