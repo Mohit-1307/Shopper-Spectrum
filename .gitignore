@@ -29,6 +29,3 @@ tmp/
 .env
 # Copied files
 * - Copy.csv
-
-# Ignore model directory
-models/
