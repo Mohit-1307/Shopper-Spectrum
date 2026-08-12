@@ -191,8 +191,8 @@ elif page == "Recommendation":
         # Convert to uppercase to match the dataset's product description format
         product_upper = product_input.upper().strip()
 
-        # Find products in the similarity matrix whose name contains the search term
-        matched = [p for p in cosine_sim_df.index if product_upper in p]
+        # cosine_sim_df is now a dict of {product: pd.Series(top-N similar products)}
+        matched = [p for p in cosine_sim_df.keys() if product_upper in p]
 
         if not matched:
 
@@ -202,11 +202,9 @@ elif page == "Recommendation":
 
             selected_product = matched[0]
 
-            # Get similarity scores for the selected product, sorted highest first
-            sim_scores = cosine_sim_df[selected_product].sort_values(ascending = False)
+            sim_scores = cosine_sim_df[selected_product]
 
-            # Exclude the input product itself and take the top 5 recommendations
-            recommendations = sim_scores[sim_scores.index != selected_product].head(5).index.tolist()
+            recommendations = sim_scores.head(5).index.tolist()
 
             st.markdown("**Recommended Products:**")
 
