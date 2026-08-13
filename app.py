@@ -73,7 +73,38 @@ st.markdown(
         color: var(--text-0);
     }
 
-    #MainMenu, footer, header {visibility: hidden;}
+    /* Hide the hamburger menu and footer only — keep the header,
+       because the header is where Streamlit's sidebar re-expand
+       arrow (>>) lives when the sidebar is collapsed. */
+    #MainMenu, footer {visibility: hidden;}
+
+    header[data-testid="stHeader"] {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    /* Hide the top-right toolbar (deploy button, etc.) without touching
+       the sidebar collapse/expand control next to it. */
+    div[data-testid="stToolbar"] {
+        visibility: hidden;
+    }
+
+    /* Make sure the sidebar collapse/expand arrow stays visible and
+       styled to match the dark theme, both when the sidebar is open
+       and when it's collapsed. */
+    button[data-testid="stSidebarCollapsedControl"],
+    button[data-testid="baseButton-headerNoPadding"] {
+        visibility: visible !important;
+        color: var(--accent) !important;
+        background: var(--bg-2) !important;
+        border: 1px solid var(--line) !important;
+        border-radius: 6px !important;
+    }
+
+    button[data-testid="stSidebarCollapsedControl"] svg {
+        fill: var(--accent) !important;
+        color: var(--accent) !important;
+    }
 
     /* ---------- Sidebar ---------- */
     section[data-testid="stSidebar"] {
