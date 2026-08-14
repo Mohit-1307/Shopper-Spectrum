@@ -81,29 +81,67 @@ st.markdown(
     header[data-testid="stHeader"] {
         background: transparent;
         box-shadow: none;
+        height: 3.2rem !important;
+        min-height: 3.2rem !important;
+        z-index: 999999 !important;
     }
 
-    /* Hide the top-right toolbar (deploy button, etc.) without touching
-       the sidebar collapse/expand control next to it. */
+    /* Hide only the deploy/menu buttons inside the toolbar, not the
+       whole toolbar container — hiding the container can also hide
+       the sidebar collapse control that sometimes lives next to it. */
     div[data-testid="stToolbar"] {
+        z-index: 999999 !important;
+    }
+    div[data-testid="stToolbar"] button[kind="header"] {
         visibility: hidden;
     }
 
-    /* Make sure the sidebar collapse/expand arrow stays visible and
-       styled to match the dark theme, both when the sidebar is open
-       and when it's collapsed. */
-    button[data-testid="stSidebarCollapsedControl"],
-    button[data-testid="baseButton-headerNoPadding"] {
+    /* ---------- Sidebar collapse / expand toggle ----------
+       This is the button the USER clicks to hide/show the sidebar
+       whenever they want. Made large + glowing so it's obvious
+       and easy to find, in both collapsed and expanded states. */
+    [data-testid="stSidebarCollapsedControl"],
+    [data-testid="collapsedControl"] {
         visibility: visible !important;
-        color: var(--accent) !important;
-        background: var(--bg-2) !important;
-        border: 1px solid var(--line) !important;
-        border-radius: 6px !important;
+        display: flex !important;
+        opacity: 1 !important;
+        position: fixed !important;
+        top: 12px !important;
+        left: 12px !important;
+        z-index: 999999 !important;
     }
 
-    button[data-testid="stSidebarCollapsedControl"] svg {
+    button[data-testid="stSidebarCollapsedControl"],
+    button[data-testid="baseButton-headerNoPadding"],
+    button[data-testid="stBaseButton-headerNoPadding"] {
+        visibility: visible !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent) !important;
+        background: var(--bg-2) !important;
+        border: 1px solid var(--accent) !important;
+        border-radius: 8px !important;
+        width: 42px !important;
+        height: 42px !important;
+        box-shadow: 0 0 14px rgba(45, 212, 191, 0.35) !important;
+        transition: box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    button[data-testid="stSidebarCollapsedControl"]:hover,
+    button[data-testid="baseButton-headerNoPadding"]:hover,
+    button[data-testid="stBaseButton-headerNoPadding"]:hover {
+        box-shadow: 0 0 22px rgba(45, 212, 191, 0.55) !important;
+        transform: translateY(-1px);
+    }
+
+    button[data-testid="stSidebarCollapsedControl"] svg,
+    button[data-testid="baseButton-headerNoPadding"] svg,
+    button[data-testid="stBaseButton-headerNoPadding"] svg {
         fill: var(--accent) !important;
         color: var(--accent) !important;
+        width: 22px !important;
+        height: 22px !important;
     }
 
     /* ---------- Sidebar ---------- */
