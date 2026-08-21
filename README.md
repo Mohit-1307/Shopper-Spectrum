@@ -1,811 +1,136 @@
-<div align="center">
+# Shopper Spectrum
 
-# 🛒 Shopper Spectrum: Customer Segmentation & Product Recommendation System
+**Customer Segmentation and Product Recommendations in E-Commerce**
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-orange)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-f7931e)
-![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red)
-![Status](https://img.shields.io/badge/Status-Completed-success)
-![License](https://img.shields.io/badge/License-MIT-green)
+An end-to-end unsupervised learning project that segments e-commerce customers using RFM (Recency, Frequency, Monetary) analysis and recommends products using item-based collaborative filtering — deployed as an interactive Streamlit app.
 
-> An end-to-end Machine Learning project that combines **Customer Segmentation** and **Product Recommendation** to improve customer engagement, personalization, retention, and revenue generation in e-commerce businesses.
-
-</div>
+**Live app:** [shopper-spectrum-app.streamlit.app](https://shopper-spectrum-app.streamlit.app)
 
 ---
 
-# Project Overview
+## Overview
 
-Shopper Spectrum is an E-Commerce Analytics solution built using transaction-level retail data. The project performs:
+This project analyzes one year of online retail transaction data (541,909 rows) to:
 
-* **Customer Segmentation** using RFM Analysis and Clustering
-* **Product Recommendation** using Item-Based Collaborative Filtering
-* **Interactive Deployment** through Streamlit
+1. **Segment customers** into four behavioral groups — High-Value, Regular, Occasional, At-Risk — using RFM features and clustering.
+2. **Recommend products** for a given item using item-based collaborative filtering (cosine similarity on co-purchase patterns).
 
-The system enables businesses to identify valuable customer groups and recommend relevant products based on purchasing behavior.
-
----
-
-## Key Highlights
-
-* End-to-end ML workflow
-* 541,909 retail transactions analyzed
-* 4,338 unique customers segmented
-* RFM-based customer profiling
-* Multiple clustering algorithms evaluated
-* KMeans selected as final production model
-* Item-based recommendation engine using cosine similarity
-* Real-time Streamlit application
-* Model persistence using Joblib
+Both modules, plus supporting analytics, are served through a Streamlit app with a custom console-style UI (dark/light toggle included).
 
 ---
 
-## Business Problem Statement
+## Data Pipeline
 
-E-commerce platforms generate large volumes of customer transaction data. Without proper analysis, businesses struggle to:
+The raw dataset (541,909 rows, 8 columns) was cleaned as follows:
 
-* Understand customer purchasing behavior
-* Identify high-value customers
-* Retain inactive customers
-* Personalize recommendations
-* Improve marketing efficiency
+| Step | Action |
+|---|---|
+| 1 | Dropped rows with missing `CustomerID` (~24.9% of rows — no customer to attribute RFM to) |
+| 2 | Dropped rows with missing `Description` (~0.27% of rows) |
+| 3 | Normalized `Description` text (stripped whitespace, upper-cased) for consistent matching downstream |
+| 4 | Removed cancelled invoices (`InvoiceNo` starting with `C`) |
+| 5 | Removed rows with non-positive `Quantity` |
+| 6 | Removed rows with non-positive `UnitPrice` |
+| 7 | Parsed `InvoiceDate` to datetime, cast `CustomerID` to int |
+| 8 | Derived `TotalPrice = Quantity × UnitPrice` |
+| 9 | Dropped remaining exact duplicate rows |
 
-This project addresses these challenges through customer segmentation and recommendation modeling.
-
----
-
-## Objectives
-
-### Customer Segmentation
-
-* Analyze customer purchase behavior
-* Generate RFM features
-* Group customers into actionable business segments
-* Identify retention opportunities
-
-### Product Recommendation
-
-* Build an item similarity engine
-* Recommend related products
-* Improve cross-selling opportunities
-* Enhance customer experience
+**Result: 392,692 clean transaction rows across 4,338 unique customers.**
 
 ---
 
-# Table of Contents
+## Customer Segmentation
 
-* [Project Overview](#project-overview)
-* [Dataset Information](#dataset-information)
-* [Project Architecture](#project-architecture)
-* [Technology Stack](#technology-stack)
-* [Exploratory Data Analysis](#exploratory-data-analysis)
-* [Data Preprocessing](#data-preprocessing)
-* [Feature Engineering](#feature-engineering)
-* [Model Development](#model-development)
-* [Hyperparameter Tuning](#hyperparameter-tuning)
-* [Results & Performance](#results--performance)
-* [Model Comparison](#model-comparison)
-* [Visualizations](#visualizations)
-* [Business Impact](#business-impact)
-* [Challenges Faced](#challenges-faced)
-* [Future Improvements](#future-improvements)
-* [Installation Guide](#installation-guide)
-* [Usage](#usage)
-* [Project Structure](#project-structure)
-* [Reproducibility](#reproducibility)
-* [Key Learnings](#key-learnings)
-* [Author](#author)
-* [Acknowledgements](#acknowledgements)
+### RFM + Extended Features
 
----
+Recency, Frequency, and Monetary were computed per customer, with outliers capped using the IQR method and features standardized before clustering. Two extended features (Tenure, Average Order Value) were engineered for deeper post-hoc profiling.
 
-# Dataset Information
+### Model Comparison
 
-## Dataset Source
+Four clustering algorithms were fit and evaluated on the same standardized RFM space:
 
-**Online Retail Dataset**
+| Model | Clusters Found | Silhouette Score ↑ | Davies-Bouldin ↓ | Calinski-Harabasz ↑ | Noise Points |
+|---|---|---|---|---|---|
+| **KMeans** | 4 | **0.4743** | **0.7951** | **6411.50** | 0 |
+| Agglomerative (Ward) | 4 | 0.4402 | 0.7770 | 4916.59 | 0 |
+| Gaussian Mixture | 4 | 0.1478 | 1.5307 | 1881.80 | 0 |
+| DBSCAN | 2 | 0.2950 | 0.7855 | 16.72 | 16 |
 
-* Domain: E-Commerce & Retail Analytics
-* Transaction-level retail purchase records
-* Customer purchasing history
-* Product-level sales information
+**KMeans (k=4) was selected as the final model** — it produced the highest Silhouette and Calinski-Harabasz scores among the four candidates, and cleanly separated four well-populated, well-balanced clusters (DBSCAN collapsed most points into a single dense cluster instead of four meaningful segments).
+
+Model robustness was additionally checked via bootstrap resampling (10 resamples) and a held-out new-customer prediction test, both confirming stable cluster assignments.
+
+### Final Segments
+
+| Segment | Customers | % of Base | Avg Recency (days) | Avg Frequency | Avg Monetary (£) | % of Total Revenue |
+|---|---|---|---|---|---|---|
+| **High-Value** | 569 | 13.1% | ~20 | ~9.9 | highest | **38.2%** |
+| **Regular** | 853 | 19.7% | ~40 | ~5.0 | mid-high | 33.1% |
+| **Occasional** | 1,907 | 44.0% | ~53 | ~2.0 | mid-low | 20.5% |
+| **At-Risk** | 1,009 | 23.3% | ~248 | ~1.4 | lowest | 8.2% |
+
+High-Value customers are just over 1 in 8 of the customer base but generate more than a third of total revenue — the core justification for prioritizing retention and targeted offers toward this segment.
 
 ---
 
-## Dataset Statistics
+## Product Recommendation System
 
-| Metric           | Value                 |
-| ---------------- | --------------------- |
-| Total Records    | 541,909               |
-| Total Features   | 8                     |
-| Unique Customers | 4,338                 |
-| Dataset Type     | Transactional         |
-| Domain           | E-Commerce            |
-| Analysis Type    | Unsupervised Learning |
+Built as **item-based collaborative filtering**: a customer-product purchase matrix is transposed so each product is represented by its purchase pattern across customers, and cosine similarity is computed between products. Given a product name, the top-N most similar products (by co-purchase pattern) are returned. A secondary, purely content-based recommender (TF-IDF over product descriptions) is also built for comparison.
 
----
+### Offline Evaluation (Leave-One-Out)
 
-## Features Description
+One purchased item per eligible customer was held out and the recommender was asked to recover it in its Top-5 recommendations, evaluated against a "most popular items" baseline:
 
-| Feature     | Description         |
-| ----------- | ------------------- |
-| InvoiceNo   | Transaction ID      |
-| StockCode   | Product Identifier  |
-| Description | Product Name        |
-| Quantity    | Units Purchased     |
-| InvoiceDate | Purchase Timestamp  |
-| UnitPrice   | Product Price       |
-| CustomerID  | Customer Identifier |
-| Country     | Customer Country    |
+| Approach | Precision@5 | Recall@5 |
+|---|---|---|
+| **Item-Based Collaborative Filtering** | **0.0104** | **0.0520** |
+| Popularity Baseline (Top-5 global) | 0.0024 | 0.0120 |
+
+- Evaluated on 4,248 customers.
+- **Coverage: 32.0%** (1,237 of 3,866 products appeared in at least one Top-5 list).
+- The collaborative filter outperforms the popularity baseline by roughly 4x on both metrics, confirming it captures genuine co-purchase signal rather than just surfacing bestsellers — though absolute precision is low in a fairly typical way for large, sparse retail catalogues, and coverage indicates a moderate popularity-bias in which recommendations skew toward frequently co-purchased items.
 
 ---
 
-## Target Variable
+## Repository Structure
 
-This is an **Unsupervised Learning Project**, therefore no explicit target variable exists.
-
-Generated outputs:
-
-* Customer Segment
-* Product Recommendations
-
----
-
-# Project Architecture
-
-## End-to-End Workflow
-
-```text
-Raw Transactions
-       │
-       ▼
-Data Cleaning
-       │
-       ▼
-EDA
-       │
-       ▼
-RFM Feature Engineering
-       │
-       ▼
-Feature Scaling
-       │
-       ▼
-Clustering Models
-       │
-       ▼
-Customer Segments
-       │
-       ▼
-Streamlit Deployment
+```
+Shopper-Spectrum/
+├── app.py                     # Streamlit application (segmentation + recommendation UI)
+├── Shopper_Spectrum.ipynb     # Full analysis: EDA, feature engineering, modeling, evaluation
+├── online_retail.csv          # Raw transaction dataset (not tracked in git — see .gitignore)
+├── requirements.txt           # Python dependencies
+├── models/
+│   ├── kmeans_model.pkl       # Trained KMeans model (k=4)
+│   ├── rfm_scaler.pkl         # StandardScaler fit on RFM features
+│   ├── cluster_label_map.pkl  # Maps KMeans cluster index → segment name
+│   ├── cosine_sim_df.pkl      # Product-product cosine similarity matrix
+│   └── rfm_segments.csv       # Final per-customer RFM + segment table (4,338 customers)
+├── images/                    # Saved chart exports from the notebook
+└── README.md
 ```
 
 ---
 
-## System Architecture
-
-```mermaid
-flowchart TD
-
-A[Online Retail Dataset]
---> B[Data Cleaning]
-
-B --> C[EDA]
-
-C --> D[RFM Feature Engineering]
-
-D --> E[Feature Scaling]
-
-E --> F[KMeans Clustering]
-
-F --> G[Customer Segments]
-
-C --> H[Customer Product Matrix]
-
-H --> I[Cosine Similarity]
-
-I --> J[Recommendation Engine]
-
-G --> K[Streamlit App]
-
-J --> K
-```
-
----
-
-# Technology Stack
-
-| Category              | Technologies                       |
-| --------------------- | ---------------------------------- |
-| Programming Language  | Python                             |
-| Data Processing       | Pandas, NumPy                      |
-| Visualization         | Matplotlib, Seaborn                |
-| Machine Learning      | Scikit-Learn                       |
-| Clustering            | KMeans, Agglomerative, GMM, DBSCAN |
-| Recommendation Engine | Collaborative Filtering            |
-| Scaling               | StandardScaler                     |
-| Model Serialization   | Joblib                             |
-| Deployment            | Streamlit                          |
-| Notebook Environment  | Jupyter Notebook                   |
-
----
-
-# Exploratory Data Analysis
-
-## Key Insights
-
-### Customer Analysis
-
-* Missing Customer IDs represented a significant portion of records.
-* Majority of sales originated from repeat customers.
-* Purchase behavior exhibited strong long-tail characteristics.
-
-### Product Analysis
-
-* Small number of products generated a large share of transactions.
-* Product demand followed a skewed distribution.
-
-### Revenue Analysis
-
-* Monetary values were highly right-skewed.
-* Extreme spenders influenced spending distributions.
-
-### RFM Insights
-
-* Frequency and Monetary exhibited strong positive relationships.
-* Recency showed inverse relationships with customer value.
-
----
-
-## Important Visualizations
-
-* Country-wise Transaction Distribution
-* Top Selling Products
-* Monthly Purchase Trends
-* Revenue Distribution
-* RFM Histograms
-* Correlation Heatmap
-* Pair Plot
-* Elbow Curve
-* Silhouette Score Curve
-* Cluster Distribution
-
----
-
-# Data Preprocessing
-
-## Missing Value Handling
-
-| Operation           | Action  |
-| ------------------- | ------- |
-| Missing CustomerID  | Removed |
-| Missing Description | Removed |
-
----
-
-## Invalid Record Removal
-
-| Condition          | Action  |
-| ------------------ | ------- |
-| Cancelled Invoices | Removed |
-| Quantity ≤ 0       | Removed |
-| UnitPrice ≤ 0      | Removed |
-
----
-
-## Outlier Treatment
-
-Method Used:
-
-* IQR Detection
-* Winsorization (Capping)
-
-Benefits:
-
-* Preserves customer records
-* Reduces extreme value influence
-* Improves clustering stability
-
----
-
-## Feature Engineering
-
-### RFM Features
-
-| Feature   | Formula                          |
-| --------- | -------------------------------- |
-| Recency   | Latest Date − Last Purchase Date |
-| Frequency | Number of Transactions           |
-| Monetary  | Total Customer Spend             |
-
-### Additional Features
-
-* Average Order Value (AOV)
-* Customer Tenure
-* RFM Score
-
----
-
-## Encoding Techniques
-
-No categorical encoding required for clustering workflow.
-
----
-
-## Scaling Method
-
-**StandardScaler**
-
-Reasons:
-
-* Distance-based clustering
-* Equal feature contribution
-* Improved cluster separation
-
----
-
-# Model Development
-
-## 1. KMeans Clustering
-
-### Working Principle
-
-Partitions observations into K clusters by minimizing within-cluster variance.
-
-### Advantages
-
-* Fast
-* Scalable
-* Easy interpretation
-
-### Limitations
-
-* Requires predefined K
-* Sensitive to initialization
-
----
-
-## 2. Agglomerative Clustering
-
-### Working Principle
-
-Bottom-up hierarchical clustering using linkage methods.
-
-### Advantages
-
-* Hierarchical relationships
-* No centroid assumptions
-
-### Limitations
-
-* Computationally expensive
-* Less scalable
-
----
-
-## 3. Gaussian Mixture Model (GMM)
-
-### Working Principle
-
-Probabilistic clustering using Gaussian distributions.
-
-### Advantages
-
-* Soft clustering
-* Flexible cluster shapes
-
-### Limitations
-
-* Computationally intensive
-* Sensitive to covariance assumptions
-
----
-
-## 4. DBSCAN
-
-### Working Principle
-
-Density-based clustering.
-
-### Advantages
-
-* Detects noise
-* Arbitrary cluster shapes
-
-### Limitations
-
-* Parameter sensitive
-* Struggles with varying densities
-
----
-
-## Recommendation Model
-
-### Item-Based Collaborative Filtering
-
-#### Working Principle
-
-1. Build Customer-Product Matrix
-2. Compute Product Similarity
-3. Apply Cosine Similarity
-4. Recommend Top Similar Products
-
-#### Advantages
-
-* Interpretable
-* Fast inference
-* Effective for retail data
-
-#### Limitations
-
-* Cold start problem
-* Sparse matrix challenges
-
----
-
-# Hyperparameter Tuning
-
-## Search Strategy
-
-### Clustering
-
-* Elbow Method
-* Silhouette Analysis
-* Davies-Bouldin Index
-* Calinski-Harabasz Score
-
----
-
-## Tuned Parameters
-
-| Model         | Parameters                    |
-| ------------- | ----------------------------- |
-| KMeans        | n_clusters, n_init            |
-| Agglomerative | linkage                       |
-| GMM           | n_components, covariance_type |
-| DBSCAN        | eps, min_samples              |
-
----
-
-## Best Configuration
-
-| Parameter          | Value  |
-| ------------------ | ------ |
-| Final Model        | KMeans |
-| Number of Clusters | 4      |
-| Random State       | 42     |
-| n_init             | 10     |
-
----
-
-# Results & Performance
-
-## Clustering Performance
-
-### Training Performance
-
-| Metric                  | Score                       |
-| ----------------------- | --------------------------- |
-| Silhouette Score        | 0.4743                      |
-| Davies-Bouldin Index    | 0.7951                      |
-| Calinski-Harabasz Score | 6411.50 |
-
----
-
-### Validation Performance
-
-| Metric                   | Score  |
-| ------------------------ | ------ |
-| Bootstrap Stability      | Stable |
-| Cluster Consistency      | High   |
-| Segment Interpretability | High   |
-
----
-
-### Test Performance
-
-| Metric                  | Score      |
-| ----------------------- | ---------- |
-| New Customer Prediction | Successful |
-| Real-Time Prediction    | Supported  |
-| Segment Mapping         | Successful |
-
----
-
-# Model Comparison
-
-| Rank | Model         | Silhouette Score | Notes              |
-| ---- | ------------- | ---------------- | ------------------ |
-| 🥇 1 | KMeans        | 0.4743           | Final Model        |
-| 🥈 2 | Agglomerative | 0.4402           | Strong Alternative |
-| 🥉 3 | DBSCAN        | 0.2950           | Density Challenges |
-| 4    | GMM           | 0.1478           | Weak Separation    |
-
----
-
-# Customer Segments
-
-| Segment    | Characteristics                           |
-| ---------- | ----------------------------------------- |
-| High-Value | Recent, frequent, high-spending customers |
-| Regular    | Consistent purchasers                     |
-| Occasional | Low frequency buyers                      |
-| At-Risk    | Inactive customers                        |
-
----
-
-# Visualizations
-
-<h2>Customer Segmentation & Clustering</h2>
-
-<p align="center">
-  <img src="images/segment_pie_chart.png" width="350">
-  <img src="images/segment_rfm_profiles.png" width="350">
-</p>
-
-<p align="center">
-  <img src="images/segment_radar_chart.png" width="350">
-  <img src="images/pca_cluster_scatter.png" width="350">
-</p>
-
-<p align="center">
-  <img src="images/clustering_model_comparison.png" width="350">
-  <img src="images/kmeans_silhouette_scores.png" width="350">
-</p>
-
-<h2>Business Insights</h2>
-
-<p align="center">
-  <img src="images/chart10_monthly_revenue_trend.png" width="350">
-  <img src="images/chart5_top10_products_revenue.png" width="350">
-</p>
-
-<p align="center">
-  <img src="images/chart6_revenue_by_country.png" width="350">
-  <img src="images/chart1_transaction_volume_by_country.png" width="350">
-</p>
-
-<h2>Customer Value Analysis</h2>
-
-<p align="center">
-  <img src="images/segment_value_concentration.png" width="350">
-  <img src="images/rfm_3d_scatter.png" width="350">
-</p>
-
-<p align="center">
-  <img src="images/rfm_score_distribution.png" width="350">
-  <img src="images/chart12_top15_customers_spend.png" width="350">
-</p>
-
-<h2>Recommendation System</h2>
-
-<p align="center">
-  <img src="images/product_similarity_heatmap.png" width="350">
-  <img src="images/recommender_evaluation_comparison.png" width="350">
-</p>
-
----
-
-# Business Impact
-
-## Practical Applications
-
-* Customer Lifetime Value Optimization
-* Customer Retention Campaigns
-* Personalized Product Recommendations
-* Cross-Selling & Upselling
-* Loyalty Program Design
-* Marketing Automation
-
----
-
-## ROI Implications
-
-* Improved customer retention
-* Higher conversion rates
-* Increased basket size
-* Better marketing efficiency
-* Reduced customer acquisition costs
-
----
-
-## Industry Use Cases
-
-* E-Commerce
-* Retail Analytics
-* Subscription Platforms
-* FMCG
-* Marketplace Businesses
-
----
-
-# Challenges Faced
-
-## Technical Challenges
-
-* Large transaction volume
-* Sparse customer-product matrix
-* Cluster interpretability
-* Hyperparameter selection
-
----
-
-## Data Challenges
-
-* Missing customer identifiers
-* Cancelled transactions
-* Extreme spending outliers
-* Skewed distributions
-
----
-
-## Solutions Implemented
-
-* Robust preprocessing
-* Winsorization
-* Feature scaling
-* Multi-model evaluation
-* Business-driven cluster labeling
-
----
-
-# Future Improvements
-
-## Scalability
-
-* Distributed processing with Spark
-* Incremental model updates
-* Automated retraining pipelines
-
----
-
-## Model Improvements
-
-* Hybrid recommendation systems
-* Matrix factorization
-* Deep learning recommenders
-* Customer lifetime value modeling
-
----
-
-## Deployment Roadmap
-
-* Docker
-* CI/CD Pipeline
-* Cloud Deployment
-* REST API
-* Monitoring Dashboard
-
----
-
-# Installation Guide
+## Running Locally
 
 ```bash
 git clone https://github.com/Mohit-1307/Shopper-Spectrum.git
-
 cd Shopper-Spectrum
-
 pip install -r requirements.txt
-```
-
----
-
-# Usage
-
-## Run Notebook
-
-```bash
-jupyter notebook
-```
-
-Open:
-
-```text
-Shopper_Spectrum.ipynb
-```
-
----
-
-## Run Streamlit Application
-
-```bash
 streamlit run app.py
 ```
 
----
-
-## Application Modules
-
-### Customer Segmentation
-
-Input:
-
-* Recency
-* Frequency
-* Monetary
-
-Output:
-
-* High-Value
-* Regular
-* Occasional
-* At-Risk
+The app expects the trained artifacts (`kmeans_model.pkl`, `rfm_scaler.pkl`, `cluster_label_map.pkl`, `cosine_sim_df.pkl`, `rfm_segments.csv`) inside `models/`. These are produced by running `Shopper_Spectrum.ipynb` end-to-end, or can be used as already provided in this repo.
 
 ---
 
-### Product Recommendation
+## Tech Stack
 
-Input:
-
-* Product Name
-
-Output:
-
-* Top 5 Similar Products
-
----
-
-# Project Structure
-
-```text
-Shopper-Spectrum/
-│
-├── data/
-│   └── online_retail.csv
-│
-├── notebooks/
-│   └── Shopper_Spectrum.ipynb
-│
-├── models/
-│   ├── kmeans_model.pkl
-│   ├── rfm_scaler.pkl
-│   ├── cluster_label_map.pkl
-│   └── cosine_sim_df.pkl
-│
-├── app.py
-├── requirements.txt
-├── README.md
-│
-├── docs/
-│   └── images/
-│
-└── outputs/
-    ├── customer_segments.csv
-    ├── recommendations.csv
-    └── evaluation_results.csv
-```
-
----
-
-# Reproducibility
-
-1. Clone repository
-2. Install dependencies
-3. Place dataset inside `data/`
-4. Execute notebook sequentially
-5. Generate RFM features
-6. Train clustering models
-7. Save model artifacts
-8. Launch Streamlit application
-
-Random Seed:
-
-```python
-random_state = 42
-```
-
----
-
-# Key Learnings
-
-* RFM-based customer analytics
-* Customer segmentation strategy
-* Unsupervised learning evaluation
-* Collaborative filtering implementation
-* Recommendation system design
-* Streamlit deployment
-* Business-focused ML interpretation
+- **Data / ML:** pandas, numpy, scikit-learn (KMeans, Agglomerative, GMM, DBSCAN), scipy
+- **Visualization:** matplotlib, seaborn, plotly
+- **App:** Streamlit
+- **Model persistence:** joblib
 
 ---
 
