@@ -1,3 +1,5 @@
+<div align="center">
+
 # Shopper Spectrum
 
 **Customer Segmentation and Product Recommendations in E-Commerce**
@@ -5,6 +7,8 @@
 An end-to-end unsupervised learning project that segments e-commerce customers using RFM (Recency, Frequency, Monetary) analysis and recommends products using item-based collaborative filtering — deployed as an interactive Streamlit app.
 
 **Live app:** [shopper-spectrum-app.streamlit.app](https://shopper-spectrum-app.streamlit.app)
+
+</div>
 
 ---
 
