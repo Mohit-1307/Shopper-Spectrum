@@ -91,7 +91,7 @@ One purchased item per eligible customer was held out and the recommender was as
 | Popularity Baseline (Top-5 global) | 0.0024 | 0.0120 |
 
 - Evaluated on 4,248 customers.
-- **Coverage: 32.0%** (1,237 of 3,866 products appeared in at least one Top-5 list).
+- **Coverage: 31.9%** (1,233 of 3,866 products appeared in at least one Top-5 list).
 - The collaborative filter outperforms the popularity baseline by roughly 4x on both metrics, confirming it captures genuine co-purchase signal rather than just surfacing bestsellers — though absolute precision is low in a fairly typical way for large, sparse retail catalogues, and coverage indicates a moderate popularity-bias in which recommendations skew toward frequently co-purchased items.
 
 ---
