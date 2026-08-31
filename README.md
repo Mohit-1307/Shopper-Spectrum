@@ -101,8 +101,7 @@ One purchased item per eligible customer was held out and the recommender was as
 ```
 Shopper-Spectrum/
 ├── app.py                     # Streamlit application (segmentation + recommendation UI)
-├── Shopper_Spectrum.ipynb     # Full analysis: EDA, feature engineering, modeling, evaluation
-├── online_retail.csv          # Raw transaction dataset (not tracked in git — see .gitignore)
+├── shopper_spectrum.ipynb     # Full analysis: EDA, feature engineering, modeling, evaluation
 ├── requirements.txt           # Python dependencies
 ├── models/
 │   ├── kmeans_model.pkl       # Trained KMeans model (k=4)
