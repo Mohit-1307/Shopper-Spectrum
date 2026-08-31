@@ -100,17 +100,18 @@ One purchased item per eligible customer was held out and the recommender was as
 
 ```
 Shopper-Spectrum/
-├── app.py                     # Streamlit application (segmentation + recommendation UI)
-├── shopper_spectrum.ipynb     # Full analysis: EDA, feature engineering, modeling, evaluation
-├── requirements.txt           # Python dependencies
 ├── models/
 │   ├── kmeans_model.pkl       # Trained KMeans model (k=4)
 │   ├── rfm_scaler.pkl         # StandardScaler fit on RFM features
 │   ├── cluster_label_map.pkl  # Maps KMeans cluster index → segment name
 │   ├── cosine_sim_df.pkl      # Product-product cosine similarity matrix
 │   └── rfm_segments.csv       # Final per-customer RFM + segment table (4,338 customers)
-├── images/                    # Saved chart exports from the notebook
-└── README.md
+├── .gitignore
+├── README.md
+├── app.py                     # Streamlit application (segmentation + recommendation UI)
+├── online_retail.csv          # Dataset
+├── requirements.txt           # Python dependencies
+└── shopper_spectrum.ipynb     # Full analysis: EDA, feature engineering, modeling, evaluation
 ```
 
 ---
