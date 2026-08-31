@@ -1,34 +1,16 @@
-# Virtual Environment
 .venv/
 env/
-
-# Python cache files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
-
-# VS Code settings
 .vscode/
-
-# System files
 .DS_Store
 Thumbs.db
-
-# Logs
 *.log
-
-# Temporary files
 temp/
 tmp/
-
-# Python environment variables
 .env
-# Copied files
 * - Copy.csv
-
-# CSV file
-online_retail.csv
+images/
