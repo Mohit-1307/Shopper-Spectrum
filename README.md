@@ -150,18 +150,6 @@ The app expects the trained artifacts (`kmeans_model.pkl`, `rfm_scaler.pkl`, `cl
 
 ---
 
-# Acknowledgements
-
-* UCI Online Retail Dataset
-* Scikit-Learn
-* Streamlit
-* Pandas
-* NumPy
-* Matplotlib
-* Open Source Community
-
----
-
 <div align="center">
 
 *If this project was useful, a ⭐ on the repository is appreciated.*
